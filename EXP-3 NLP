@@ -8,3 +8,54 @@ instantiate the chatbot and simulate a multi sentence conversation .Printing bot
 
 pip install transformers
 pip install torch
+from transformers import GPT2LMHeadModel, GPT2Tokenizer, pipeline
+
+class Chatbot:
+    def __init__(self, model_name='gpt2'):
+        # Initialize the model and tokenizer
+        self.tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+        self.model = GPT2LMHeadModel.from_pretrained(model_name)
+        
+        # Set up the text generation pipeline
+        self.generator = pipeline('text-generation', model=self.model, tokenizer=self.tokenizer)
+        
+        # Initialize conversation history
+        self.chat_history = ""
+
+    def generate_response(self, user_input):
+        # Add user input to the chat history
+        self.chat_history += "User: " + user_input + self.tokenizer.eos_token
+        
+        # Generate a response based on the chat history
+        response = self.generator(self.chat_history, max_length=500, num_return_sequences=1, pad_token_id=self.tokenizer.eos_token_id)
+        
+        # Extract the bot's generated response (ignoring the previous chat history)
+        bot_message = response[0]['generated_text'][len(self.chat_history):].strip()
+        
+        # Add the bot's response to the history for the next interaction
+        self.chat_history += "Chatbot: " + bot_message + self.tokenizer.eos_token
+        
+        return bot_message
+
+# Instantiate the chatbot
+chatbot = Chatbot()
+
+# Simulate a multi-line conversation
+def simulate_conversation():
+    print("Chatbot: Hello! How can I assist you today? (Type 'quit' to end the conversation)")
+
+    while True:
+        user_input = input("You: ")
+
+        # If user types 'quit', break out of the conversation
+        if user_input.lower() == 'quit':
+            print("Chatbot: Goodbye!")
+            break
+        
+        # Generate and print the bot's response
+        bot_response = chatbot.generate_response(user_input)
+        print(f"Chatbot: {bot_response}")
+
+# Start the conversation
+simulate_conversation()
+
