@@ -1,0 +1,43 @@
+(generate a python script that uses the google trans library to translate a series of conversation snippets into English.
+The script should contain the following                                                                                         
+Import the translator class from the google translibrary.Define a function called translate_text that takes a text string and a destination language cods as parameters.
+This function should return the translated text.Create a list of conversatio snippets each containing a text xtring and its corresponding language code .
+Loop through the list and print each original conversation snippet along with its translation in English if its not already in English)
+!pip install googletrans==4.0.0-rc1
+from googletrans import Translator
+
+# Define the translate_text function
+def translate_text(text, dest_language='en'):
+    """
+    Translates the input text into the destination language using Google Translate.
+    :param text: Text to be translated
+    :param dest_language: The language code to translate the text to (default is 'en' for English)
+    :return: Translated text
+    """
+    translator = Translator()
+    # Translate the text to the destination language
+    translated = translator.translate(text, dest=dest_language)
+    return translated.text
+
+# Create a list of conversation snippets (text, language code)
+conversation_snippets = [
+    ("Hola, ¿cómo estás?", "es"),  # Spanish
+    ("Bonjour, comment ça va?", "fr"),  # French
+    ("Wie geht's dir?", "de"),  # German
+    ("Ciao, come stai?", "it"),  # Italian
+    ("こんにちは、お元気ですか?", "ja"),  # Japanese
+    ("Hello, how are you?", "en")  # English (no translation needed)
+]
+
+# Loop through each conversation snippet and translate if necessary
+for snippet, lang_code in conversation_snippets:
+    print(f"Original ({lang_code}): {snippet}")
+    
+    # If the language code is not 'en', translate the text
+    if lang_code != 'en':
+        translated_text = translate_text(snippet, dest_language='en')
+        print(f"Translated: {translated_text}")
+    else:
+        print("No translation needed (already in English).")
+    
+    print('-' * 50)  # Separator between snippets
