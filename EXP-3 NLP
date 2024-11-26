@@ -1,0 +1,10 @@
+what is NLP and explain in a brief manner and also what is the use of it.
+what is text preprocessing.
+what are the model in NLPand text classification
+(create a python script using the transformation library to build a simple chatbot powered by GPT-2 Import GPT2 Tokenizer,
+GPT2 LM Head Model and pipeline then load the pretrained GPT-2.Model along with its tokenizer initialize a text generation pipeline using these components .
+Define a chatbot class that manages the conversation and generates responses based on user input with a method to update the context and produce coherent replies finally,
+instantiate the chatbot and simulate a multi sentence conversation .Printing both user inputs and bots response to demonstrate its functionality)
+
+pip install transformers
+pip install torch
