@@ -55,7 +55,61 @@ def simulate_conversation():
         # Generate and print the bot's response
         bot_response = chatbot.generate_response(user_input)
         print(f"Chatbot: {bot_response}")
-
+###########################################################################################################
 # Start the conversation
 simulate_conversation()
+
+from transformers import GPT2LMHeadModel, GPT2Tokenizer, pipeline
+
+class ChatBot:
+    def __init__(self):
+        # Load the GPT-2 tokenizer and model
+        self.tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+        self.model = GPT2LMHeadModel.from_pretrained('gpt2')
+        
+        # Initialize the text generation pipeline
+        self.generator = pipeline('text-generation', model=self.model, tokenizer=self.tokenizer)
+        
+        # Initialize conversation context
+        self.context = ""
+
+    def update_context(self, user_input):
+        """Update the conversation context with user input."""
+        self.context += f"User: {user_input}\nBot:"
+        
+    def generate_response(self):
+        """Generate a response from the chatbot based on the conversation context."""
+        # Use max_new_tokens instead of max_length to avoid truncation issues
+        response = self.generator(self.context, max_new_tokens=50, num_return_sequences=1, pad_token_id=self.tokenizer.eos_token_id)
+        return response[0]['generated_text'].split("Bot:")[-1].strip()
+    
+    def chat(self, user_input):
+        """Handle the chat by updating context and generating a response."""
+        self.update_context(user_input)
+        bot_response = self.generate_response()
+        self.context += f" {bot_response}\n"  # Update context with bot's response
+        return bot_response
+
+# Instantiate the chatbot
+chatbot = ChatBot()
+
+# Simulate a multi-sentence conversation
+user_inputs = [
+    "Hello, how are you?",
+    "What's your name?",
+    "Can you help me with something?",
+    "Tell me a joke!"
+]
+
+# Print user inputs and bot responses
+for user_input in user_inputs:
+    print(f"User: {user_input}")
+    bot_response = chatbot.chat(user_input)
+    print(f"Bot: {bot_response}\n")
+
+
+
+
+
+
 
